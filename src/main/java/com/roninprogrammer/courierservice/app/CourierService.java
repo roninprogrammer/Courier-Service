@@ -28,7 +28,10 @@ public class CourierService {
                     case 2 -> processDeliveryTimeEstimation(scanner);
                     case 3 -> {
                         System.out.println("\n Thank you for using Kiki's Courier Service! Bye Bye!");
-                        executor.shutdown();
+                        if (!executor.isShutdown()) {
+                            executor.shutdownNow();
+                        }
+                        return;
                     }
                     default -> System.out.println("Invalid choice! Please select a valid option.");
                 }
@@ -66,6 +69,7 @@ public class CourierService {
         }
 
         displayCostSummary(baseDeliveryCost, packages);
+        System.out.println("Calculation Complete! Thank you for using Kiki's Courier Service!\n");
     }
 
     private static void processDeliveryTimeEstimation(Scanner scanner) {
@@ -109,13 +113,36 @@ public class CourierService {
     private static void displayCostSummary(double baseDeliveryCost, List<Parcel> packages) {
         System.out.println("\n Package Delivery Cost Summary ");
         System.out.println("------------------------------------------------------------");
-        System.out.printf("| %-10s | %-10s | %-10s | %-10s |\n", "Package", "Weight(kg)", "Distance(km)", "Offer Code");
+        System.out.printf("| %-10s | %-10s | %-10s |\n", "Package", "Discount", "Total Cost");
         System.out.println("------------------------------------------------------------");
         for (Parcel pkg : packages) {
-            System.out.printf("| %-10s | %-10.2f | %-10.2f | %-10s |\n", 
-                    pkg.getId(), pkg.getWeight(), pkg.getDistance(), pkg.getOfferCode());
+            System.out.printf("| %-10s | %-10.2f | %-10.2f |\n", 
+            pkg.getId(), pkg.getDiscount(), pkg.getTotalCost());
         }
         System.out.println("------------------------------------------------------------\n");
+        for (Parcel pkg : packages) {
+            System.out.println("Package: " + pkg.getId());
+            System.out.println("Base Delivery Cost: " + baseDeliveryCost);
+            System.out.println("Weight: " + pkg.getWeight() + "kg | Distance: " + pkg.getDistance() + "km");
+            System.out.println("Offer Code: " + pkg.getOfferCode());
+        
+            if (pkg.getDiscount() == 0) {
+                System.out.println("Discount: (Offer not applicable as criteria not met)");
+            } else {
+                System.out.printf("Discount Applied: - %.2f\n", pkg.getDiscount());
+            }
+        
+            // Delivery Cost Breakdown
+            double weightCost = pkg.getWeight() * 10;
+            double distanceCost = pkg.getDistance() * 5;
+            System.out.println("----Delivery Cost Calculation:----");
+            System.out.printf("  %.2f + (%.2f * 10) + (%.2f * 5)\n", baseDeliveryCost, pkg.getWeight(), pkg.getDistance());
+            System.out.printf("  Total Cost Before Discount: %.2f\n", (baseDeliveryCost + weightCost + distanceCost));
+            System.out.printf("  Discount: -%.2f\n", pkg.getDiscount());
+            System.out.printf("  Final Total Cost: %.2f\n", pkg.getTotalCost());
+            
+        System.out.println("------------------------------------------------------------\n");
+        }
     }
 
     private static void displayDeliverySummary(List<Parcel> packages) {
