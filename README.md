@@ -102,6 +102,17 @@ cd courierservice
 java -cp out com.roninprogrammer.courierservice.app.CourierService
 ```
 
+### 4. Output For Challenge 1: 
+
+![Main Interface](assets/1.png)
+![Begin with Challenge No 1](assets/2.png)
+![Begin with Challenge No 1](assets/3.png)
+
+### 5. Output For Challenge 2: 
+
+3
+![Begin with Challenge No 2](assets/2.png)
+![Begin with Challenge No 2](assets/3.png)
 
 ### Testing
 Run unit tests using JUnit.
