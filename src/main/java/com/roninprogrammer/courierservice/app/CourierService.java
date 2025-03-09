@@ -100,7 +100,14 @@ public class CourierService {
 
         System.out.println("\n Processing Delivery Cost & Estimated Time...");
         DeliveryCostCalculator.calculate(packages, vehicles, scanner, executor);
+        roundOffDeliveryTimes(packages);
         displayDeliverySummary(packages);
+    }
+
+    private static void roundOffDeliveryTimes(List<Parcel> packages) {
+        for (int i = 0; i < packages.size(); i++) {
+            packages.get(i).setDeliveryTime(Math.round(packages.get(i).getDeliveryTime() * 100.0) / 100.0);
+        }
     }
 
     private static List<Parcel> getPackagesInput(Scanner scanner) {
@@ -154,6 +161,7 @@ public class CourierService {
     }
 
     private static void displayDeliverySummary(List<Parcel> packages) {
+          packages.sort((p1, p2) -> p1.getId().compareTo(p2.getId()));
         System.out.println("\n Package Delivery Time Summary ");
         System.out.println("-----------------------------------------------------------");
         System.out.printf("| %-10s | %-10s | %-10s | %-10s |\n", "Package", "Discount", "Total Cost", "Est. Time");
