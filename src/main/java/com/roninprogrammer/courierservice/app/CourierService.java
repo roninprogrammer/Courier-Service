@@ -1,6 +1,7 @@
 package com.roninprogrammer.courierservice.app;
 
-import com.roninprogrammer.courierservice.model.Package;
+import com.roninprogrammer.courierservice.model.Parcel;
+import com.roninprogrammer.courierservice.services.OfferService;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -25,7 +26,7 @@ public class CourierService {
             System.out.print("Enter your choice: ");
             int choice = scanner.nextInt();
             if (choice == 3) {
-                System.out.println("\n Thank you for using Kiki's Courier Service! Stay legendary!");
+                System.out.println("\n Thank you for using Kiki's Courier Service! Bye Bye!");
                 executor.shutdown();
                 break;
             }
@@ -36,25 +37,25 @@ public class CourierService {
                 System.out.print(" Enter number of packages: ");
                 int numberOfPackages = scanner.nextInt();
 
-                List<Package> packages = new ArrayList<>();
+                List<Parcel> packages = new ArrayList<>();
                 for (int i = 0; i < numberOfPackages; i++) {
                     System.out.print(" Enter package details (ID, Weight, Distance, Offer Code): ");
                     String id = scanner.next();
                     double weight = scanner.nextDouble();
                     double distance = scanner.nextDouble();
                     String offerCode = scanner.next();
-                    packages.add(new Package(id, weight, distance, offerCode));
+                    packages.add(new Parcel(id, weight, distance, offerCode));
                 }
 
-                for (Package pkg : packages) {
-                    double cost = baseDeliveryCost + (pkg.weight * 10) + (pkg.distance * 5);
-                    pkg.discount = OfferService.getDiscount(pkg, cost);
-                    pkg.totalCost = cost - pkg.discount;
+                for (Parcel pkg : packages) {
+                    double cost = baseDeliveryCost + (pkg.getWeight() * 10) + (pkg.getDistance() * 5);
+                    pkg.setDiscount(OfferService.getDiscount(pkg, cost));
+                    pkg.setTotalCost(cost - pkg.getDiscount());
                 }
 
                 System.out.println("\nOutput Format: pkg_id discount total_cost");
-                for (Package pkg : packages) {
-                    System.out.printf("%s %.2f %.2f\n", pkg.id, pkg.discount, pkg.totalCost);
+                for (Parcel pkg : packages) {
+                    System.out.printf("%s %.2f %.2f\n", pkg.getId(), pkg.getDiscount(), pkg.getTotalCost());
                 }
             } catch (Exception e) {
                 logger.severe("Error processing input: " + e.getMessage());
