@@ -109,10 +109,8 @@ java -cp out com.roninprogrammer.courierservice.app.CourierService
 ![Begin with Challenge No 1](assets/3.png)
 
 ### 5. Output For Challenge 2: 
+![Begin with Challenge No 2](assets/challenge2.png)
 
-3
-![Begin with Challenge No 2](assets/2.png)
-![Begin with Challenge No 2](assets/3.png)
 
 ### Testing
 Run unit tests using JUnit.
