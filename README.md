@@ -1,7 +1,7 @@
 # Courier Service - Coding Challenge
 
 ## Overview
-This Android application calculates the **total delivery cost** and **estimated delivery time** for a set of packages, considering base cost, weight, distance, and available vehicles. The solution adheres to SOLID principles and is designed for scalability.
+This java **Command Line Interface(CLI)** calculates the **total delivery cost** and **estimated delivery time** for a set of packages, considering base cost, weight, distance, and available vehicles. The solution adheres to SOLID principles and is designed for scalability.
 
 ## Features
 - Computes the **total delivery cost** for each package, including applicable discounts.
@@ -11,15 +11,15 @@ This Android application calculates the **total delivery cost** and **estimated 
 - Ensures efficient package delivery by maximizing vehicle utilization.
 
 ## Prerequisites
-- Android Studio (latest version)
-- Minimum SDK: 23 (Android 6.0)
-- Recommended: JUnit for running unit tests
+- **Java 11+**
+- **Gradle (Recommended for building & running)**
+- **JUnit (For unit testing, if required)**
 
 ## Installation
 Clone the repository and open it in Android Studio:
 ```bash
 $ git clone <repo-url>
-$ cd courier-service-android
+$ cd courierservice
 ```
 
 Build the project and run it on an emulator or physical device. 
@@ -58,23 +58,23 @@ Formula :
 Total Delivery Cost = Base Cost + (Weight * 10) + (Distance * 5) - Discount
 ```
 
-- Only one offer code is applicable per package.
+    - Only one offer code is applicable per package.
 
-- If an invalid offer code is provided, the discount is 0.
+    - If an invalid offer code is provided, the discount is 0.
 
 If an invalid offer code is provided, the discount is 0.2. Delivery Time Calculation
 
-- Vehicles deliver packages in batches while respecting their weight capacity.
+    - Vehicles deliver packages in batches while respecting their weight capacity.
 
-- Vehicles always travel at max speed and return to the source before the next trip.
+    - Vehicles always travel at max speed and return to the source before the next trip.
+ 
+**Priority**:
 
-- Priority:
+    1.Maximize number of packages per trip.
 
-1.Maximize number of packages per trip.
+    2.Prefer heavier packages when tie occurs.
 
-2.Prefer heavier packages when tie occurs.
-
-3.Prioritize shortest delivery time if weights are the same.
+    3.Prioritize shortest delivery time if weights are the same.
 
 
 ### Assumption 
@@ -84,8 +84,30 @@ If an invalid offer code is provided, the discount is 0.2. Delivery Time Calcula
 
 - Input format follows the given specifications.
 
+### 1. Installation & Running the application
+
+```bash
+git clone <repo-url>
+cd courierservice
+```
+
+### 2. Compile the project: 
+
+```bash
+ javac -d out src/main/java/com/roninprogrammer/courierservice/app/CourierService.java
+```
+
+### 3. Run the application:
+```bash
+java -cp out com.roninprogrammer.courierservice.app.CourierService
+```
+
+
 ### Testing
-Run unit tests using JUnit in Android Studio.
+Run unit tests using JUnit.
+```bash
+./gradlew test
+```
 
 ### Design Principles Followed
 - SOLID Principles: Ensures maintainability and scalability.
