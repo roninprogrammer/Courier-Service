@@ -8,6 +8,7 @@ import com.roninprogrammer.courierservice.services.OfferService;
 import com.roninprogrammer.courierservice.services.OfferServiceTest;
 
 import java.util.ArrayList;
+import java.util.Comparator;
 import java.util.List;
 import java.util.Scanner;
 import java.util.concurrent.ExecutorService;
@@ -102,6 +103,7 @@ public class CourierService {
         DeliveryCostCalculator.calculate(packages, vehicles, scanner, executor);
         roundOffDeliveryTimes(packages);
         displayDeliverySummary(packages);
+        displayDetailDelivery(packages, vehicles);
     }
 
     private static void roundOffDeliveryTimes(List<Parcel> packages) {
@@ -172,6 +174,50 @@ public class CourierService {
         }
         System.out.println("-----------------------------------------------------------");
         System.out.println("Calculation Complete! Thank you for using Kiki's Courier Service!");
+    }
+
+    public static void displayDetailDelivery(List<Parcel> packages, List<Vehicle> vehicles){
+    System.out.println("\n Detailed Package Delivery Breakdown ");
+    System.out.println("-----------------------------------------------------------");
+
+    double currentTime = 0.0;
+    List<Parcel> remainingPackages = new ArrayList<>(packages);
+
+    while (!remainingPackages.isEmpty()) {
+        vehicles.sort(Comparator.comparingDouble(Vehicle::getAvailableAt));
+        Vehicle availableVehicle = vehicles.get(0);
+        
+        List<Parcel> assignedPackages = new ArrayList<>();
+        double totalWeight = 0.0;
+        
+        for (Parcel pkg : new ArrayList<>(remainingPackages)) {
+            if (totalWeight + pkg.getWeight() <= availableVehicle.getMaxWeight()) {
+                assignedPackages.add(pkg);
+                totalWeight += pkg.getWeight();
+            }
+        }
+        
+        remainingPackages.removeAll(assignedPackages);
+
+        if (!assignedPackages.isEmpty()) {
+            double maxDeliveryTime = assignedPackages.stream()
+                    .mapToDouble(pkg -> pkg.getDistance() / availableVehicle.getSpeed())
+                    .max()
+                    .orElse(0.0);
+
+            double roundedTime = Math.round(maxDeliveryTime * 100.0) / 100.0;
+            availableVehicle.setAvailableAt(currentTime + 2 * roundedTime);
+            
+            System.out.printf("\n Vehicle Assigned: %s (Available at: %.2f hrs)\n", availableVehicle, currentTime);
+            System.out.printf("Packages Assigned: %s (Total Weight: %.2f kg)\n", assignedPackages, totalWeight);
+            System.out.printf("Estimated Delivery Time: %.2f hrs\n", roundedTime);
+
+            currentTime += roundedTime;
+        }
+    }
+
+    System.out.println("-----------------------------------------------------------");
+    System.out.println("All packages delivered successfully!");
     }
 
 }
