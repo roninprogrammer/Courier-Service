@@ -30,6 +30,10 @@ public class Parcel {
     public void setTotalCost(double totalCost) { this.totalCost = totalCost; }
     public void setDeliveryTime(double deliveryTime) { this.deliveryTime = deliveryTime; }
 
-
+    @Override
+    public String toString() {
+        return String.format("%s (Weight: %.2f kg, Distance: %.2f km, Offer Code: %s)", 
+                id, weight, distance, offerCode);
+    }
 
 }

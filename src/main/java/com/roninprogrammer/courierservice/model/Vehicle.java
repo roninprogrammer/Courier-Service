@@ -40,5 +40,10 @@ public class Vehicle {
         this.availableAt = availableAt;
     }
 
+    @Override
+    public String toString() {
+        return String.format("Vehicle (Speed: %.2f km/hr, Max Load: %.2f kg, Available At: %.2f hrs)", 
+                speed, maxWeight, availableAt);
+    }
 
 }

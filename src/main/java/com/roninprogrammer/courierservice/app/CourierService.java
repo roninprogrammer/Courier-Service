@@ -176,7 +176,7 @@ public class CourierService {
         System.out.println("Calculation Complete! Thank you for using Kiki's Courier Service!");
     }
 
-    public static void displayDetailDelivery(List<Parcel> packages, List<Vehicle> vehicles){
+   private static void displayDetailDelivery(List<Parcel> packages, List<Vehicle> vehicles){
     System.out.println("\n Detailed Package Delivery Breakdown ");
     System.out.println("-----------------------------------------------------------");
 
@@ -208,8 +208,8 @@ public class CourierService {
             double roundedTime = Math.round(maxDeliveryTime * 100.0) / 100.0;
             availableVehicle.setAvailableAt(currentTime + 2 * roundedTime);
             
-            System.out.printf("\n Vehicle Assigned: %s (Available at: %.2f hrs)\n", availableVehicle, currentTime);
-            System.out.printf("Packages Assigned: %s (Total Weight: %.2f kg)\n", assignedPackages, totalWeight);
+            System.out.printf("\n Vehicle Assigned: %s\n", availableVehicle);
+            System.out.printf("Packages Assigned: %s\n", assignedPackages);
             System.out.printf("Estimated Delivery Time: %.2f hrs\n", roundedTime);
 
             currentTime += roundedTime;
