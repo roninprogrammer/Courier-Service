@@ -20,16 +20,6 @@ public class DeliveryCostCalculator {
                 pkg.setDeliveryTime(roundedTime);
             }
         }
-
-        System.out.println(" Calculation Complete! Thank you for using Kiki's Courier Service! \n");
-        
-        System.out.print("Return to Main Menu: ");
-        int choice = scanner.nextInt();
-        if (choice == 3) {
-            System.out.println("\n Thank you for using Kiki's Courier Service! Bye Bye!");
-            executor.shutdown();
-            System.exit(0);
-        }
     }
 }
 

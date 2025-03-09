@@ -78,6 +78,14 @@ public class CourierService {
 
         List<Parcel> packages = getPackagesInput(scanner);
 
+        //Make sure total cost is calc before calling deliverycostcalculator
+
+        for (Parcel pkg : packages) {
+            double cost = baseDeliveryCost + (pkg.getWeight() * 10) + (pkg.getDistance() * 5);
+            pkg.setDiscount(OfferService.getDiscount(pkg, cost));
+            pkg.setTotalCost(cost - pkg.getDiscount());
+        }
+
         System.out.print("Enter Number of Vehicles: ");
         int numberOfVehicles = scanner.nextInt();
         System.out.print("Enter Max Speed (km/hr): ");
