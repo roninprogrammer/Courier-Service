@@ -59,23 +59,38 @@ public class CourierService {
     }
 
     private static void processCostEstimation(Scanner scanner) {
-        System.out.print("Enter Base Delivery Cost: ");
-        double baseDeliveryCost = scanner.nextDouble();
-
-        List<Parcel> packages = getPackagesInput(scanner);
-        for (Parcel pkg : packages) {
-            double cost = baseDeliveryCost + (pkg.getWeight() * 10) + (pkg.getDistance() * 5);
-            pkg.setDiscount(OfferService.getDiscount(pkg, cost));
-            pkg.setTotalCost(cost - pkg.getDiscount());
-        }
-
-        displayCostSummary(baseDeliveryCost, packages);
-        System.out.println("Calculation Complete! Thank you for using Kiki's Courier Service!\n");
-    }
-
-    private static void processDeliveryTimeEstimation(Scanner scanner) {
-        System.out.print("Enter Base Delivery Cost: ");
-        double baseDeliveryCost = scanner.nextDouble();
+         double baseDeliveryCost = getValidDouble(scanner, "Enter Base Delivery Cost: ");
+        
+                List<Parcel> packages = getPackagesInput(scanner);
+                for (Parcel pkg : packages) {
+                    double cost = baseDeliveryCost + (pkg.getWeight() * 10) + (pkg.getDistance() * 5);
+                    pkg.setDiscount(OfferService.getDiscount(pkg, cost));
+                    pkg.setTotalCost(cost - pkg.getDiscount());
+                }
+        
+                displayCostSummary(baseDeliveryCost, packages);
+                System.out.println("Calculation Complete! Thank you for using Kiki's Courier Service!\n");
+            }
+        
+            private static double getValidDouble(Scanner scanner, String prompt) {
+                double value;
+                while (true) {
+                    System.out.print(prompt);
+                    if (scanner.hasNextDouble()) {
+                        value = scanner.nextDouble();
+                        if (value > 0) break;
+                        else System.out.println("Value must be positive.");
+                    } else {
+                        System.out.println("Invalid input! Please enter a valid number.");
+                        scanner.next(); // Consume invalid input
+                    }
+                }
+                return value; 
+               
+            }
+        
+        private static void processDeliveryTimeEstimation(Scanner scanner) {
+         double baseDeliveryCost = getValidDouble(scanner, "Enter Base Delivery Cost: ");
 
         List<Parcel> packages = getPackagesInput(scanner);
 
@@ -115,27 +130,46 @@ public class CourierService {
     }
 
     private static List<Parcel> getPackagesInput(Scanner scanner) {
-        System.out.print("Enter Number of Packages: ");
-        int numberOfPackages = scanner.nextInt();
-        List<Parcel> packages = new ArrayList<>();
-        for (int i = 0; i < numberOfPackages; i++) {
-            System.out.print("Enter Package Details (ID, Weight, Distance, Offer Code): ");
-            String id = scanner.next();
-            double weight = scanner.nextDouble();
-            double distance = scanner.nextDouble();
-            String offerCode = scanner.next();
-            packages.add(new Parcel(id, weight, distance, offerCode));
-        }
-        return packages;
-    }
+        int numberOfPackages = getValidInt(scanner, "Enter Number of Packages: ");
+                List<Parcel> packages = new ArrayList<>();
+                for (int i = 0; i < numberOfPackages; i++) {
+                    System.out.print("Enter Package Details (ID, Weight, Distance, Offer Code): ");
+                    String id = scanner.next();
+                    
+                    double weight = getValidDouble(scanner, "Enter package weight (kg): ");
+                    double distance = getValidDouble(scanner, "Enter package distance (km): ");
+                    String offerCode = scanner.next(); // Offer code can be any string
+                    
+                    packages.add(new Parcel(id, weight, distance, offerCode));
+                }
+                return packages;
+            }
+        
 
-    private static void displayCostSummary(double baseDeliveryCost, List<Parcel> packages) {
+            private static int getValidInt(Scanner scanner, String prompt) {
+                int value;
+                while (true) {
+                    System.out.print(prompt);
+                    if (scanner.hasNextInt()) {
+                        value = scanner.nextInt();
+                        if (value > 0) break;
+                        else System.out.println("Number must be positive.");
+                    } else {
+                        System.out.println("Invalid input! Please enter a valid integer.");
+                        scanner.next(); 
+                    }
+                }
+                return value;
+            }
+        
+    
+        private static void displayCostSummary(double baseDeliveryCost, List<Parcel> packages) {
         System.out.println("\n Package Delivery Cost Summary ");
         System.out.println("------------------------------------------------------------");
         System.out.printf("| %-10s | %-10s | %-10s |\n", "Package", "Discount", "Total Cost");
         System.out.println("------------------------------------------------------------");
         for (Parcel pkg : packages) {
-            System.out.printf("| %-10s | %-10.2f | %-10.2f |\n", 
+            System.out.printf("|  %-10s | %-10s | %-10s |\n", 
             pkg.getId(), formatNumber(pkg.getDiscount()), formatNumber(pkg.getTotalCost()));
         }
         System.out.println("------------------------------------------------------------\n");
@@ -154,11 +188,10 @@ public class CourierService {
             // Delivery Cost Breakdown
             double weightCost = pkg.getWeight() * 10;
             double distanceCost = pkg.getDistance() * 5;
-            System.out.println("----Delivery Cost Calculation:----");
-            System.out.printf("  %.2f + (%.2f * 10) + (%.2f * 5)\n", formatNumber(baseDeliveryCost), formatNumber(pkg.getWeight()), formatNumber(pkg.getDistance()));
-            System.out.printf("  Total Cost Before Discount: %.2f\n", (formatNumber(baseDeliveryCost) + formatNumber(weightCost) + formatNumber(distanceCost)));
-            System.out.printf("  Discount: -%.2f\n", formatNumber(pkg.getDiscount()));
-            System.out.printf("  Final Total Cost: %.2f\n", formatNumber(pkg.getTotalCost()));
+            System.out.printf("  %.2f + (%.2f * 10) + (%.2f * 5)\n", baseDeliveryCost, pkg.getWeight(), pkg.getDistance());
+            System.out.printf("  Total Cost Before Discount: %.2f\n", baseDeliveryCost + (weightCost) + (distanceCost));
+            System.out.printf("  Discount: -%.2f\n", pkg.getDiscount());
+            System.out.printf("  Final Total Cost: %.2f\n", pkg.getTotalCost());;
             
         System.out.println("------------------------------------------------------------\n");
         }
@@ -210,25 +243,22 @@ public class CourierService {
             double roundedTime = Math.round(maxDeliveryTime * 100.0) / 100.0;
             availableVehicle.setAvailableAt(currentTime + 2 * roundedTime);
             
-            System.out.printf("\n 🚛 Vehicle Assigned: %s\n", availableVehicle);
-            System.out.println(" 📦 Packages Assigned:");
+            System.out.printf("\n  Vehicle Assigned: %s\n", availableVehicle);
+            System.out.println("  Packages Assigned:");
             assignedPackages.forEach(pkg -> System.out.printf("   - %s\n", pkg));
-            System.out.printf(" ⏳ Estimated Delivery Time: %.2f hrs\n", roundedTime);
+            System.out.printf(" Estimated Delivery Time: %.2f hrs\n", roundedTime);
 
             currentTime += roundedTime;
         }
     }
 
     System.out.println("-----------------------------------------------------------");
-    System.out.println("✅ All packages delivered successfully!");
+    System.out.println("All packages delivered successfully!");
     }
 
-    private static String formatNumber(double number) {
-        if (number % 1 == 0) {
-            return String.format("%d", (int) number);
-        } else {
-            return String.format("%.2f", number); 
-        }
+    private static Object formatNumber(double number) {
+        return (number % 1 == 0) ? (int) number : number; 
     }
+    
 
 }
