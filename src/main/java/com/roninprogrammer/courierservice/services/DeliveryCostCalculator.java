@@ -9,11 +9,11 @@ public class DeliveryCostCalculator {
     public static void calculate(List<Parcel> packages, List<Vehicle> vehicles) {
         packages.sort(Comparator.comparingDouble(Parcel::getWeight).reversed());
 
-        PriorityQueue<Vehicle> vehicleQueue = new PriorityQueue<>(Comparator.comparingDouble(Vehicle::getAvailableAt));
-
-        for (Vehicle vehicle : vehicles) {
-            vehicleQueue.add(vehicle);
-        }
+        PriorityQueue<Vehicle> vehicleQueue = new PriorityQueue<>(
+            Comparator.comparingDouble(Vehicle::getAvailableAt)
+                      .thenComparingDouble(Vehicle::getSpeed).reversed()
+        );
+        vehicleQueue.addAll(vehicles);
 
         for (Parcel pkg : packages) {
             Vehicle assignedVehicle = vehicleQueue.poll();
@@ -26,7 +26,7 @@ public class DeliveryCostCalculator {
             deliveryTime = Math.round(deliveryTime * 100.0) / 100.0; 
 
             assignedVehicle.setAvailableAt(assignedVehicle.getAvailableAt() + (2 * deliveryTime));
-            pkg.setEstimatedDeliveryTime(deliveryTime);
+            pkg.setEstimatedDeliveryTime(assignedVehicle.getAvailableAt());
 
             vehicleQueue.add(assignedVehicle);
         }

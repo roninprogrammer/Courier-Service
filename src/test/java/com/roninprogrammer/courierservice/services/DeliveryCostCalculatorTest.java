@@ -19,12 +19,12 @@ public class DeliveryCostCalculatorTest {
     @Test
     void testDeliveryOrder() {
         List<Parcel> packages = new ArrayList<>();
-        packages.add(new Parcel("PKG1", 50, 30, "OFR001"));  // 1) Lighter package
-        packages.add(new Parcel("PKG2", 75, 125, "OFR008")); // 2) Heavier package
-        packages.add(new Parcel("PKG3", 175, 100, "OFR003")); // 2_ Heaviest package
+        packages.add(new Parcel("PKG1", 50, 30, "OFR001"));  
+        packages.add(new Parcel("PKG2", 75, 125, "OFR008")); 
+        packages.add(new Parcel("PKG3", 175, 100, "OFR003")); 
 
         List<Vehicle> vehicles = new ArrayList<>();
-        vehicles.add(new Vehicle(70, 200)); // Vehicle speed: 70 km/hr, max weight: 200kg
+        vehicles.add(new Vehicle(70, 200));
 
         DeliveryCostCalculator.calculate(packages, vehicles);
 
