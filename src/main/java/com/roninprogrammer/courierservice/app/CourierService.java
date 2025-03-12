@@ -100,7 +100,7 @@ public class CourierService {
         }
 
         System.out.println("\n Processing Delivery Cost & Estimated Time...");
-        DeliveryCostCalculator.calculate(packages, vehicles, scanner, executor);
+        DeliveryCostCalculator.calculate(packages, vehicles);
         roundOffDeliveryTimes(packages);
         displayDeliverySummary(packages);
         displayDetailDelivery(packages, vehicles);
@@ -108,7 +108,9 @@ public class CourierService {
 
     private static void roundOffDeliveryTimes(List<Parcel> packages) {
         for (int i = 0; i < packages.size(); i++) {
-            packages.get(i).setDeliveryTime(Math.round(packages.get(i).getDeliveryTime() * 100.0) / 100.0);
+            packages.get(i).setEstimatedDeliveryTime(
+                Math.round(packages.get(i).getEstimatedDeliveryTime() * 100.0) / 100.0
+            );
         }
     }
 
@@ -170,14 +172,14 @@ public class CourierService {
         System.out.println("-----------------------------------------------------------");
         for (Parcel pkg : packages) {
             System.out.printf("| %-10s | %-10.2f | %-10.2f | %-10.2f |\n", 
-                    pkg.getId(), pkg.getDiscount(), pkg.getTotalCost(), pkg.getDeliveryTime());
+                    pkg.getId(), pkg.getDiscount(), pkg.getTotalCost(), pkg.getEstimatedDeliveryTime());
         }
         System.out.println("-----------------------------------------------------------");
         System.out.println("Calculation Complete! Thank you for using Kiki's Courier Service!");
     }
 
-   private static void displayDetailDelivery(List<Parcel> packages, List<Vehicle> vehicles){
-    System.out.println("\n Detailed Package Delivery Breakdown ");
+    private static void displayDetailDelivery(List<Parcel> packages, List<Vehicle> vehicles){
+        System.out.println("\n  Detailed Package Delivery Breakdown ");
     System.out.println("-----------------------------------------------------------");
 
     double currentTime = 0.0;
@@ -208,16 +210,17 @@ public class CourierService {
             double roundedTime = Math.round(maxDeliveryTime * 100.0) / 100.0;
             availableVehicle.setAvailableAt(currentTime + 2 * roundedTime);
             
-            System.out.printf("\n Vehicle Assigned: %s\n", availableVehicle);
-            System.out.printf("Packages Assigned: %s\n", assignedPackages);
-            System.out.printf("Estimated Delivery Time: %.2f hrs\n", roundedTime);
+            System.out.printf("\n 🚛 Vehicle Assigned: %s\n", availableVehicle);
+            System.out.println(" 📦 Packages Assigned:");
+            assignedPackages.forEach(pkg -> System.out.printf("   - %s\n", pkg));
+            System.out.printf(" ⏳ Estimated Delivery Time: %.2f hrs\n", roundedTime);
 
             currentTime += roundedTime;
         }
     }
 
     System.out.println("-----------------------------------------------------------");
-    System.out.println("All packages delivered successfully!");
+    System.out.println("✅ All packages delivered successfully!");
     }
 
 }

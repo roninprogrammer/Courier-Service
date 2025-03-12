@@ -20,11 +20,15 @@ public class Vehicle {
         this.assignedParcels = new ArrayList<>();
     }
 
-    // Getters
+    
     public double getSpeed() { return speed; }
     public double getMaxWeight() { return maxWeight; }
     public double getAvailableAt() { return availableAt; }
     public List<Parcel> getAssignedParcels() { return assignedParcels; }
+
+    public void setAvailableAt(double availableAt) {
+        this.availableAt = availableAt;
+    }
 
     
     public boolean assignParcel(Parcel parcel) {
@@ -42,7 +46,7 @@ public class Vehicle {
 
     @Override
     public String toString() {
-        return String.format("Vehicle (Speed: %.2f km/hr, Max Load: %.2f kg, Available At: %.2f hrs, Parcels: %s)", 
-                speed, maxWeight, availableAt, assignedParcels);
+        return String.format("Vehicle (Speed: %.2f km/hr, Max Load: %.2f kg, Available At: %.2f hrs)", 
+        speed, maxWeight, availableAt);
     }
 }

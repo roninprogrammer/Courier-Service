@@ -22,9 +22,8 @@ public class DeliveryCostCalculator {
                 throw new IllegalStateException("No vehicles available for assignment.");
             }
             
-            //Assign the package to the vehicle with the earliest available time
             double deliveryTime = pkg.getDistance() / assignedVehicle.getSpeed();
-            deliveryTime = Math.round(deliveryTime * 100.0) / 100.0; // Round to 2 decimal places
+            deliveryTime = Math.round(deliveryTime * 100.0) / 100.0; 
 
             assignedVehicle.setAvailableAt(assignedVehicle.getAvailableAt() + (2 * deliveryTime));
             pkg.setEstimatedDeliveryTime(deliveryTime);

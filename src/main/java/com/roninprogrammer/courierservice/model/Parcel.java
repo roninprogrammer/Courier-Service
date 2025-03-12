@@ -33,6 +33,14 @@ public class Parcel {
     public double getTotalCost() { return totalCost; }
     public double getEstimatedDeliveryTime() { return estimatedDeliveryTime; }
 
+    public void setDiscount(double discount) {
+        this.discount = discount;
+    }
+
+    public void setTotalCost(double totalCost) {
+        this.totalCost = totalCost;
+    }
+
     public void calculateDiscount(double baseDeliveryCost) {
         double cost = baseDeliveryCost + (weight * 10) + (distance * 5);
         this.discount = OfferDetails.getDiscount(offerCode, weight, distance) * cost;
@@ -45,7 +53,7 @@ public class Parcel {
 
     @Override
     public String toString() {
-        return String.format("Parcel %s (%.2fkg, %.2fkm, Offer: %s, Cost: %.2f, Time: %.2f hrs)", 
-                id, weight, distance, offerCode, totalCost, estimatedDeliveryTime);
+        return String.format("Parcel %s (%.2f kg, %.2f km, Offer: %s)", 
+        id, weight, distance, (offerCode != null ? offerCode : "None"));
     }
 }
