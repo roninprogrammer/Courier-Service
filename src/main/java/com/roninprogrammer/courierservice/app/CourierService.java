@@ -135,11 +135,9 @@ public class CourierService {
                 for (int i = 0; i < numberOfPackages; i++) {
                     System.out.print("Enter Package Details (ID, Weight, Distance, Offer Code): ");
                     String id = scanner.next();
-                    
-                    double weight = getValidDouble(scanner, "Enter package weight (kg): ");
-                    double distance = getValidDouble(scanner, "Enter package distance (km): ");
-                    String offerCode = scanner.next(); // Offer code can be any string
-                    
+                    double weight = scanner.nextDouble();
+                    double distance = scanner.nextDouble();
+                    String offerCode = scanner.next();
                     packages.add(new Parcel(id, weight, distance, offerCode));
                 }
                 return packages;
