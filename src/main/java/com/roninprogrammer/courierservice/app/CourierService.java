@@ -136,29 +136,29 @@ public class CourierService {
         System.out.println("------------------------------------------------------------");
         for (Parcel pkg : packages) {
             System.out.printf("| %-10s | %-10.2f | %-10.2f |\n", 
-            pkg.getId(), pkg.getDiscount(), pkg.getTotalCost());
+            pkg.getId(), formatNumber(pkg.getDiscount()), formatNumber(pkg.getTotalCost()));
         }
         System.out.println("------------------------------------------------------------\n");
         for (Parcel pkg : packages) {
             System.out.println("Package: " + pkg.getId());
-            System.out.println("Base Delivery Cost: " + baseDeliveryCost);
-            System.out.println("Weight: " + pkg.getWeight() + "kg | Distance: " + pkg.getDistance() + "km");
+            System.out.println("Base Delivery Cost: " + formatNumber(baseDeliveryCost));
+            System.out.println("Weight: " + formatNumber(pkg.getWeight())  + "kg | Distance: " + formatNumber(pkg.getDistance()) + "km");
             System.out.println("Offer Code: " + pkg.getOfferCode());
         
             if (pkg.getDiscount() == 0) {
                 System.out.println("Discount: (Offer not applicable as criteria not met)");
             } else {
-                System.out.printf("Discount Applied: - %.2f\n", pkg.getDiscount());
+                System.out.printf("Discount Applied: - %.2f\n", formatNumber(pkg.getDiscount()));
             }
         
             // Delivery Cost Breakdown
             double weightCost = pkg.getWeight() * 10;
             double distanceCost = pkg.getDistance() * 5;
             System.out.println("----Delivery Cost Calculation:----");
-            System.out.printf("  %.2f + (%.2f * 10) + (%.2f * 5)\n", baseDeliveryCost, pkg.getWeight(), pkg.getDistance());
-            System.out.printf("  Total Cost Before Discount: %.2f\n", (baseDeliveryCost + weightCost + distanceCost));
-            System.out.printf("  Discount: -%.2f\n", pkg.getDiscount());
-            System.out.printf("  Final Total Cost: %.2f\n", pkg.getTotalCost());
+            System.out.printf("  %.2f + (%.2f * 10) + (%.2f * 5)\n", formatNumber(baseDeliveryCost), formatNumber(pkg.getWeight()), formatNumber(pkg.getDistance()));
+            System.out.printf("  Total Cost Before Discount: %.2f\n", (formatNumber(baseDeliveryCost) + formatNumber(weightCost) + formatNumber(distanceCost)));
+            System.out.printf("  Discount: -%.2f\n", formatNumber(pkg.getDiscount()));
+            System.out.printf("  Final Total Cost: %.2f\n", formatNumber(pkg.getTotalCost()));
             
         System.out.println("------------------------------------------------------------\n");
         }
@@ -221,6 +221,14 @@ public class CourierService {
 
     System.out.println("-----------------------------------------------------------");
     System.out.println("✅ All packages delivered successfully!");
+    }
+
+    private static String formatNumber(double number) {
+        if (number % 1 == 0) {
+            return String.format("%d", (int) number);
+        } else {
+            return String.format("%.2f", number); 
+        }
     }
 
 }
