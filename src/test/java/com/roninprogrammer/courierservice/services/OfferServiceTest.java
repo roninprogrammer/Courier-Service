@@ -10,26 +10,35 @@ import java.util.ArrayList;
 import java.util.List;
 import static org.junit.jupiter.api.Assertions.*;
 
-public class OfferServiceTest {
-    private Parcel testParcel;
-    
-    @BeforeEach
-    void setUp() {
-        testParcel = new Parcel("PKG1", 10, 100, "OFR003");
-    }
-    
+class OfferServiceTest {
+
     @Test
-    void testOfferServiceDiscount() {
-        double cost = 100 + (testParcel.getWeight() * 10) + (testParcel.getDistance() * 5);
-        double discount = OfferService.getDiscount(testParcel, cost);
-        assertEquals(35.0, discount, 0.01, "Discount should be 5% of 700");
+    void testValidOfferCode() {
+        Parcel parcel = new Parcel("PKG1", 100, 150, "OFR001");
+        double baseCost = 100;
+        double expectedCost = baseCost + (100 * 10) + (150 * 5); // 100 + 1000 + 750 = 1850
+        double discount = OfferService.getDiscount(parcel, expectedCost);
+
+        assertEquals(185.00, discount, "OFR001 should give a 10% discount");
     }
-    
+
     @Test
     void testInvalidOfferCode() {
-        Parcel invalidParcel = new Parcel("PKG2", 15, 50, "INVALID");
-        double cost = 100 + (invalidParcel.getWeight() * 10) + (invalidParcel.getDistance() * 5);
-        double discount = OfferService.getDiscount(invalidParcel, cost);
-        assertEquals(0.0, discount, "Invalid offer codes should give 0 discount");
+        Parcel parcel = new Parcel("PKG2", 50, 50, "INVALID");
+        double baseCost = 100;
+        double expectedCost = baseCost + (50 * 10) + (50 * 5); // 100 + 500 + 250 = 850
+        double discount = OfferService.getDiscount(parcel, expectedCost);
+
+        assertEquals(0.00, discount, "Invalid offer code should return 0 discount");
+    }
+
+    @Test
+    void testOfferNotApplicable() {
+        Parcel parcel = new Parcel("PKG3", 250, 300, "OFR002"); // Out of valid range
+        double baseCost = 100;
+        double expectedCost = baseCost + (250 * 10) + (300 * 5); // 100 + 2500 + 1500 = 4100
+        double discount = OfferService.getDiscount(parcel, expectedCost);
+
+        assertEquals(0.00, discount, "OFR002 should not apply as weight/distance is invalid");
     }
 }

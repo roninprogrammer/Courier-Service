@@ -14,21 +14,44 @@ import org.junit.jupiter.api.Test;
 
 import static org.junit.jupiter.api.Assertions.*;
 
-public class DeliveryCostCalculatorTest {
-    private List<Parcel> packages;
-    private List<Vehicle> vehicles;
-    
-    @BeforeEach
-    void setUp() {
-        packages = new ArrayList<>();
-        vehicles = new ArrayList<>();
-        packages.add(new Parcel("PKG1", 10, 100, "OFR003"));
-        vehicles.add(new Vehicle(70, 200));
-    }
-    
+class DeliveryCostCalculatorTest {
+
     @Test
-    void testDeliveryTimeEstimation() {
-        DeliveryCostCalculator.calculate(packages, vehicles, null, null);
-        assertEquals(1.42, packages.get(0).getDeliveryTime(), 0.01, "Delivery time should be rounded to 1.42 hours");
+    void testDeliveryOrder() {
+        List<Parcel> packages = new ArrayList<>();
+        packages.add(new Parcel("PKG1", 50, 30, "OFR001"));  // Lighter package
+        packages.add(new Parcel("PKG2", 75, 125, "OFR008")); // Heavier package
+        packages.add(new Parcel("PKG3", 175, 100, "OFR003")); // Heaviest package
+
+        List<Vehicle> vehicles = new ArrayList<>();
+        vehicles.add(new Vehicle(70, 200)); // Vehicle speed: 70 km/hr, max weight: 200kg
+
+        DeliveryCostCalculator.calculate(packages, vehicles);
+
+        assertEquals(1.42, packages.get(2).getEstimatedDeliveryTime(), 0.01, "PKG3 should be delivered first (heaviest)");
+        assertEquals(1.78, packages.get(1).getEstimatedDeliveryTime(), 0.01, "PKG2 should be delivered next (next heaviest)");
+        assertEquals(3.98, packages.get(0).getEstimatedDeliveryTime(), 0.01, "PKG1 should be delivered last (lightest)");
+    }
+
+    @Test
+    void testMultipleVehicles() {
+        List<Parcel> packages = new ArrayList<>();
+        packages.add(new Parcel("PKG1", 50, 30, "OFR001"));
+        packages.add(new Parcel("PKG2", 75, 125, "OFR008"));
+        packages.add(new Parcel("PKG3", 175, 100, "OFR003"));
+        packages.add(new Parcel("PKG4", 110, 60, "OFR002"));
+        packages.add(new Parcel("PKG5", 155, 95, "NA"));
+
+        List<Vehicle> vehicles = new ArrayList<>();
+        vehicles.add(new Vehicle(70, 200)); // Vehicle 1
+        vehicles.add(new Vehicle(70, 200)); // Vehicle 2
+
+        DeliveryCostCalculator.calculate(packages, vehicles);
+
+        assertEquals(3.98, packages.get(0).getEstimatedDeliveryTime(), 0.01);
+        assertEquals(1.78, packages.get(1).getEstimatedDeliveryTime(), 0.01);
+        assertEquals(1.42, packages.get(2).getEstimatedDeliveryTime(), 0.01);
+        assertEquals(0.85, packages.get(3).getEstimatedDeliveryTime(), 0.01);
+        assertEquals(4.19, packages.get(4).getEstimatedDeliveryTime(), 0.01);
     }
 }
