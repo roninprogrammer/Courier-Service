@@ -23,11 +23,17 @@ public class DeliveryCostCalculator {
             }
             
             double deliveryTime = pkg.getDistance() / assignedVehicle.getSpeed();
-            deliveryTime = Math.round(deliveryTime * 100.0) / 100.0; 
+            deliveryTime = Math.round(deliveryTime * 100.0) / 100.0;
+    
 
+            double estimatedDeliveryTime = assignedVehicle.getAvailableAt() + deliveryTime;
+            estimatedDeliveryTime = Math.round(estimatedDeliveryTime * 100.0) / 100.0;
+    
+            pkg.setEstimatedDeliveryTime(estimatedDeliveryTime);
+    
+         
             assignedVehicle.setAvailableAt(assignedVehicle.getAvailableAt() + (2 * deliveryTime));
-            pkg.setEstimatedDeliveryTime(assignedVehicle.getAvailableAt());
-
+    
             vehicleQueue.add(assignedVehicle);
         }
     }
